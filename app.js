@@ -1,87 +1,15 @@
-function buildMetadata(sample) {
-    d3.json("samples.json").then((data) => {
-        var metadata = data.metadata;
-        var filterArray = metadata.filter(sampleObject => sampleObject.id == sample);
-        var result = filterArray[0];
-        var panel = d3.select("#sample-metadata");
-        panel.html("");
-        Object.entries(result).forEach(([key, value]) => {
-            panel.append("h6").text(`${key.toUpperCase()}: ${value}`)
-        })
+// create a scatter plot between two of the data variables such as `Healthcare vs. Poverty` or `Smokers vs. Age`.
+// create a scatter plot that represents each state with circle elements using d3.csv
+// * Include state abbreviations in the circles.
+// * Create and situate your axes and labels to the left and bottom of the chart.
 
-// Use `Object.entries` to add each key and value pair to the panel
-  // Hint: Inside the loop, you will need to use d3 to append new
-  // tags for each key-value in the metadata.
-    });
-}
-function buildCharts(sample) {    
-    d3.json("samples.json").then((data) => {
-    var samples = data.samples;
-    var filterArray = samples.filter(sampleObject => sampleObject.id == sample);
-    var result = filterArray[0];
-    var sample_values = result.sample_values;
-    var otu_ids = result.otu_ids;
-    var otu_labels = result.otu_labels;   
-    // Bubble Chart
-    var trace1 = {
-        x: otu_ids,
-        y: sample_values,
-        text: otu_labels,
-        mode: 'markers',
-        marker: {
-        size: sample_values,
-        color: otu_ids, 
-        colorscale:"Earth"
-        }
-    };
-    var data = [trace1];
-    var layout = {
-        title: 'Bacteria Cultures per Sample',
-        showlegend: false,
-        hovermode: 'closest',
-        xaxis: {title:"OTU ID"},
-        margin: {t:30}
-    };
-    Plotly.newPlot('bubble', data, layout);  
-    var trace1 = {
-        x: sample_values.slice(0,10).reverse(),
-        y: otu_ids.slice(0,10).map(otuID => `OTU ${otuID}`).reverse(),
-        text: otu_labels.slice(0,10).reverse(),
-        name: "Greek",
-        type: "bar",
-        orientation: "h"
-    };
-    var data = [trace1];
-    var layout = {
-        title: "Top Ten OTUs for Individual 940",
-        margin: {l: 100, r: 100, t: 100, b: 100}
-    };
-    Plotly.newPlot("bar", data, layout);  
-    });
-}
-function init() {
-    // Grab a reference to the dropdown select element
-    var selector = d3.select("#selDataset");
-    // Use the list of sample names to populate the select options
-    d3.json("samples.json").then((data) => {
-        var sampleNames = data.names;
-      sampleNames.forEach((sample) => {
-        selector
-          .append("option")
-          .text(sample)
-          .property("value", sample);
-      });
-      // Use the first sample from the list to build the initial plots
-      const firstSample = sampleNames[0];
-      buildCharts(firstSample);
-      buildMetadata(firstSample);
-    });
-  }
-  function optionChanged(newSample) {
-    // Fetch new data each time a new sample is selected
-    buildCharts(newSample);
-    buildMetadata(newSample);
-  }
-  // Initialize the dashboard
-  init();
-
+// Place additional labels in your scatter plot and give them click events so that your users can decide which data to display. 
+// Animate the transitions for your circles' locations as well as the range of your axes. 
+// Do this for two risk factors for each axis. 
+// Or, for an extreme challenge, create three for each axis.
+// * Hint: Try binding all of the CSV data to your circles. 
+// This will let you easily determine their x or y values when you click the labels.
+// Use the `d3-tip.js` plugin developed by [Justin Palmer](https://github.com/Caged)
+// —we've already included this plugin in your assignment directory. (Images/8-tooltip.gif)
+// Check out [David Gotz's example](https://bl.ocks.org/davegotz/bd54b56723c154d25eedde6504d30ad7) 
+// to see how you should implement tooltips with d3-tip.
